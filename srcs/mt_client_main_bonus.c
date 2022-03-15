@@ -10,71 +10,101 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minitalk.h"
+#include "../inc/minitalk_bonus.h"
 
-static int sended = 0;
+static char	*g_message = NULL;
 
-void ft_confirm(int signo)
+void	ft_prepare_to_exit(void)
 {
-	static int confirmed = 0;
+	if (g_message)
+		free(g_message);
+	exit(0);
+}
 
-	confirmed++;
-	if (signo == SIGUSR2)
+void	ft_kill_errors(int pid, int signo)
+{
+	if (signo == 1)
 	{
-		ft_printf("bits sended %i - bits confirmed %i",sended, confirmed);
-		if (sended == confirmed)
-			ft_printf(" - \x1b[34mOK\x1b[0m\n");
-		else
-			ft_printf(" - \x1b[31mKO\x1b[0m\n");
-		exit(0);
+		if (kill(pid, SIGUSR1) == -1)
+		{
+			ft_printf("\x1b[31mKill function error (SIGUSR1).\x1b[0m\n");
+			ft_prepare_to_exit();
+		}
+	}
+	else if (signo == 2)
+	{
+		if (kill(pid, SIGUSR2) == -1)
+		{
+			ft_printf("\x1b[31mKill function error (SIGUSR2).\x1b[0m\n");
+			ft_prepare_to_exit();
+		}
 	}
 }
 
-int	ft_to_bin(int pid, char c)
+void	ft_messenger(int pid)
 {
-	int	i;
+	static int	i = 0;
+	static int	pid_to = 0;
+	static int	bytes = 8;
 
-	i = 8;
-	while (i--)
+	if (pid_to == 0)
+		pid_to = pid;
+	if (bytes <= 0)
+		bytes = 8;
+	if (g_message[i])
 	{
-		sended++;
-		if (c >> i & 1) 
-			kill(pid, SIGUSR1);
-		else
-			kill(pid, SIGUSR2);
-		//pause();
-		usleep(100);
+		if (bytes--)
+		{
+			if (g_message[i] >> bytes & 1)
+				ft_kill_errors(pid_to, 1);
+			else
+				ft_kill_errors(pid_to, 2);
+		}
+		if (bytes == 0)
+			i++;
 	}
-	return (1);
+	else
+	{
+		if (bytes--)
+			ft_kill_errors(pid_to, 2);
+	}
 }
 
-int ft_messenger(int pid, char *message)
+void	ft_handler(int signo)
 {
-	int	i;
-	int rst;
-
-	i = 0;
-	rst = 0;
-	while (message[i])
+	if (signo == SIGUSR1)
 	{
-		rst += ft_to_bin(pid, message[i]);
-		i++;
+		usleep(20);
+		ft_messenger(0);
 	}
-	ft_to_bin(pid, '\0');
-	return (rst);
+	else if (signo == SIGUSR2)
+		ft_prepare_to_exit();
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
-	int	to_send;
+	int	pid;
 
-	if (argc == 1)
+	if (argc != 3)
+	{
+		ft_printf("\x1b[31mError\x1b[0m\n");
+		ft_printf("\x1B[38;2;176;174;174mIntructions:\n");
+		ft_printf("Run: ./client [PID-server] \"message to send\"\x1b[0m\n");
 		return (0);
-	to_send = ft_strlen(argv[2]);
-	signal(SIGUSR1, &ft_confirm);
-	signal(SIGUSR2, &ft_confirm);
-	ft_messenger(ft_atoi(argv[1]), argv[2]);
+	}
+	pid = ft_atoi(argv[1]);
+	if (pid < 1)
+	{
+		ft_printf("\x1b[31mPID Error\x1b[0m\n");
+		return (0);
+	}
+	signal(SIGUSR1, &ft_handler);
+	signal(SIGUSR2, &ft_handler);
+	g_message = ft_strdup(argv[2]);
+	ft_messenger(pid);
 	while (1)
+	{
 		pause();
-	return 0;
+	}
+	return (0);
 }
