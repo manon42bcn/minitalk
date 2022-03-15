@@ -23,6 +23,8 @@ void	ft_prepare_to_exit(void)
 
 void	ft_kill_errors(int pid, int signo)
 {
+	static int	sended = 0;
+
 	if (signo == 1)
 	{
 		if (kill(pid, SIGUSR1) == -1)
@@ -30,6 +32,7 @@ void	ft_kill_errors(int pid, int signo)
 			ft_printf("\x1b[31mKill function error (SIGUSR1).\x1b[0m\n");
 			ft_prepare_to_exit();
 		}
+		sended++;
 	}
 	else if (signo == 2)
 	{
@@ -38,7 +41,12 @@ void	ft_kill_errors(int pid, int signo)
 			ft_printf("\x1b[31mKill function error (SIGUSR2).\x1b[0m\n");
 			ft_prepare_to_exit();
 		}
+		sended++;
 	}
+	if (signo == 1 || signo == 2)
+		usleep(200);
+	else if (signo == 0)
+		ft_printf("\x1b[35m[bits sended %i]", sended);
 }
 
 void	ft_messenger(int pid)
@@ -72,13 +80,19 @@ void	ft_messenger(int pid)
 
 void	ft_handler(int signo)
 {
+	static int	confirmed = 0;
+
+	confirmed++;
 	if (signo == SIGUSR1)
 	{
-		usleep(20);
 		ft_messenger(0);
 	}
 	else if (signo == SIGUSR2)
+	{
+		ft_kill_errors(0, 0);
+		ft_printf("\x1b[34m[confirmations received %i]\x1b[0m\n", confirmed);
 		ft_prepare_to_exit();
+	}
 }
 
 int	main(int argc, char *argv[])
@@ -103,8 +117,6 @@ int	main(int argc, char *argv[])
 	g_message = ft_strdup(argv[2]);
 	ft_messenger(pid);
 	while (1)
-	{
 		pause();
-	}
 	return (0);
 }

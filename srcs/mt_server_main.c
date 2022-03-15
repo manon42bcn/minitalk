@@ -16,7 +16,7 @@ static int	g_recieved = 0;
 
 void	ft_end_minitalk(siginfo_t *info)
 {
-	ft_printf("\n\x1b[34m[%i] has sended %i bits\n", info->si_pid, g_recieved);
+	ft_printf("\n\x1b[34m[%i] sended %i bits\n", info->si_pid, g_recieved);
 	ft_printf("------------------------------------\x1b[0m\n");
 	g_recieved = 0;
 }

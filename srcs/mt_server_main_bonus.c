@@ -16,6 +16,7 @@ static int	g_recieved = 0;
 
 void	ft_kill_errors(int pid, int signo)
 {
+	usleep(20);
 	if (signo == 1)
 	{
 		if (kill(pid, SIGUSR1) == -1)
@@ -37,8 +38,8 @@ void	ft_kill_errors(int pid, int signo)
 void	ft_end_minitalk(siginfo_t *info)
 {
 	ft_kill_errors(info->si_pid, 2);
-	ft_printf("\n\x1b[34m[%i] has sended %i bits\n", info->si_pid, g_recieved);
-	ft_printf("------------------------------------\x1b[0m\n");
+	ft_printf("\n\x1b[34m[%i sended] %i bits\n", info->si_pid, g_recieved);
+	ft_printf("\x1b[35m------------------------------------------\x1b[0m\n");
 	g_recieved = 0;
 }
 
@@ -66,7 +67,6 @@ void	ft_handler(int signo, siginfo_t *info, void *context)
 	}
 	else
 		rst <<= 1;
-	usleep(20);
 	ft_kill_errors(info->si_pid, 1);
 }
 
@@ -77,11 +77,14 @@ int	main(void)
 	ft_printf("\x1b[32m[PID-server: %i]\x1b[0m\n", getpid());
 	ft_printf("\x1B[38;2;176;174;174mIntructions:\n");
 	ft_printf("Run: ./client [PID-server] \"message to send\"\x1b[0m\n");
+	ft_printf("\x1b[35m------------------------------------------\x1b[0m\n");
 	s_sig.sa_sigaction = ft_handler;
 	s_sig.sa_flags = SA_SIGINFO;
-	sigaction(SIGUSR1, &s_sig, 0);
-	sigaction(SIGUSR2, &s_sig, 0);
 	while (1)
+	{
+		sigaction(SIGUSR1, &s_sig, 0);
+		sigaction(SIGUSR2, &s_sig, 0);
 		pause();
+	}
 	return (0);
 }
