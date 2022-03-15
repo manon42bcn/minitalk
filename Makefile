@@ -56,9 +56,11 @@ bonus: $(SERVER_BNS) $(CLIENT_BNS)
 
 $(SERVER_BNS): $(OBJS_SRV_BNS) $(LIB_DIR)$(LIB)
 	$(CC) $(CFLAGS) -o $(SERVER_BNS) $(OBJS_SRV_BNS) $(LIB_DIR)$(LIB)
+	mv server_bonus server
 
 $(CLIENT_BNS): $(OBJS_CLT_BNS) $(LIB_DIR)$(LIB)
 	$(CC) $(CFLAGS) -o $(CLIENT_BNS) $(OBJS_CLT_BNS) $(LIB_DIR)$(LIB)
+	mv client_bonus client
 
 $(OBJS_SRV_BNS): $(SRCS_SRV_BNS)
 	$(CC) $(CFLAGS) -c $(SRCS_SRV_BNS) $(INCLUDES_BNS)
