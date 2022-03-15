@@ -12,6 +12,24 @@
 
 #include "../inc/minitalk.h"
 
+static int sended = 0;
+
+void ft_confirm(int signo)
+{
+	static int confirmed = 0;
+
+	confirmed++;
+	if (signo == SIGUSR2)
+	{
+		ft_printf("bits sended %i - bits confirmed %i",sended, confirmed);
+		if (sended == confirmed)
+			ft_printf(" - \x1b[34mOK\x1b[0m\n");
+		else
+			ft_printf(" - \x1b[31mKO\x1b[0m\n");
+		exit(0);
+	}
+}
+
 int	ft_to_bin(int pid, char c)
 {
 	int	i;
@@ -19,62 +37,44 @@ int	ft_to_bin(int pid, char c)
 	i = 8;
 	while (i--)
 	{
-		if (c >> i & 1)
-		{
-			if (kill(pid, SIGUSR1) == -1)
-			{
-				ft_printf("\x1b[31mKill function error (SIGUSR1).\x1b[0m\n");
-				exit (0);
-			}
-		}
+		sended++;
+		if (c >> i & 1) 
+			kill(pid, SIGUSR1);
 		else
-		{
-			if (kill(pid, SIGUSR2) == -1)
-			{
-				ft_printf("\x1b[31mKill function error (SIGUSR2).\x1b[0m\n");
-				exit (0);
-			}
-		}
-		usleep(50);
+			kill(pid, SIGUSR2);
+		//pause();
+		usleep(100);
 	}
 	return (1);
 }
 
-int	ft_messenger(int pid, char *message)
+int ft_messenger(int pid, char *message)
 {
 	int	i;
-	int	sended;
+	int rst;
 
 	i = 0;
-	sended = 0;
+	rst = 0;
 	while (message[i])
 	{
-		sended += ft_to_bin(pid, message[i]);
+		rst += ft_to_bin(pid, message[i]);
 		i++;
 	}
-	sended += ft_to_bin(pid, '\0');
-	return (sended);
+	ft_to_bin(pid, '\0');
+	return (rst);
 }
 
-int	main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-	int	pid;
-	int	sended;
+	int	to_send;
 
-	if (argc != 3)
-	{
-		ft_printf("\x1b[31mError\x1b[0m\n");
-		ft_printf("\x1B[38;2;176;174;174mIntructions:\n");
-		ft_printf("Run: ./client [PID-server] \"message to send\"\x1b[0m\n");
+	if (argc == 1)
 		return (0);
-	}
-	pid = ft_atoi(argv[1]);
-	if (pid < 1)
-	{
-		ft_printf("\x1b[31mPID Error\x1b[0m\n");
-		return (0);
-	}
-	sended = ft_messenger(pid, argv[2]);
-	ft_printf("\x1b[34mchars sended %i\x1b[0m\n", sended);
-	return (0);
+	to_send = ft_strlen(argv[2]);
+	signal(SIGUSR1, &ft_confirm);
+	signal(SIGUSR2, &ft_confirm);
+	ft_messenger(ft_atoi(argv[1]), argv[2]);
+	while (1)
+		pause();
+	return 0;
 }
