@@ -39,7 +39,7 @@ void	ft_handler(int signo, siginfo_t *info, void *context)
 			i = 0;
 			ft_end_minitalk(info);
 		}
-		ft_putchar_fd(rst, 1);
+		write(1, &rst, 1);
 		rst = 0;
 		i = 0;
 	}
@@ -56,8 +56,11 @@ int	main(void)
 	ft_printf("Run: ./client [PID-server] \"message to send\"\x1b[0m\n");
 	s_sig.sa_sigaction = ft_handler;
 	s_sig.sa_flags = SA_SIGINFO;
-	sigaction(SIGUSR1, &s_sig, 0);
-	sigaction(SIGUSR2, &s_sig, 0);
+	sigemptyset(&s_sig.sa_mask);
+	sigaddset(&s_sig.sa_mask, SIGUSR1);
+	sigaddset(&s_sig.sa_mask, SIGUSR2);
+	sigaction(SIGUSR1, &s_sig, NULL);
+	sigaction(SIGUSR2, &s_sig, NULL);
 	while (1)
 		pause();
 	return (0);

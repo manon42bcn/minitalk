@@ -80,6 +80,9 @@ int	main(void)
 	ft_printf("\x1b[35m------------------------------------------\x1b[0m\n");
 	s_sig.sa_sigaction = ft_handler;
 	s_sig.sa_flags = SA_SIGINFO;
+	sigemptyset(&s_sig.sa_mask);
+	sigaddset(&s_sig.sa_mask, SIGUSR1);
+	sigaddset(&s_sig.sa_mask, SIGUSR2);
 	while (1)
 	{
 		sigaction(SIGUSR1, &s_sig, 0);

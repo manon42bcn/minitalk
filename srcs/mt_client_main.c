@@ -35,7 +35,7 @@ int	ft_to_bin(int pid, char c)
 				exit (0);
 			}
 		}
-		usleep(50);
+		usleep(200);
 	}
 	return (1);
 }

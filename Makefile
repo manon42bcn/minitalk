@@ -38,10 +38,10 @@ INCLUDES_BNS	=	-Iinc/minitalk.h
 all: $(SERVER) $(CLIENT)
  
 $(SERVER): $(OBJS_SRV) $(LIB_DIR)$(LIB)
-	$(CC) $(CFLAGS) -o $(SERVER) $(OBJS_SRV) $(LIB_DIR)$(LIB)
+	$(CC) -o $(SERVER) $(OBJS_SRV) $(LIB_DIR)$(LIB)
 
 $(CLIENT): $(OBJS_CLT) $(LIB_DIR)$(LIB)
-	$(CC) $(CFLAGS) -o $(CLIENT) $(OBJS_CLT) $(LIB_DIR)$(LIB)
+	$(CC) -o $(CLIENT) $(OBJS_CLT) $(LIB_DIR)$(LIB)
 
 $(OBJS_SRV): $(SRCS_SRV)
 	$(CC) $(CFLAGS) -c $(SRCS_SRV) $(INCLUDES)
