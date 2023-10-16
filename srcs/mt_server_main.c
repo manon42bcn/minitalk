@@ -12,8 +12,16 @@
 
 #include "../inc/minitalk.h"
 
+/**
+ * @brief Counter for the number of bits received during a mini-talk session.
+ */
 static int	g_recieved = 0;
 
+/**
+ * @brief Ends the current mini-talk session, displaying the number of bits sent.
+ *
+ * @param info Information structure related to signals.
+ */
 void	ft_end_minitalk(siginfo_t *info)
 {
 	ft_printf("\n\x1b[34m[%i] sended %i bits\n", info->si_pid, g_recieved);
@@ -21,6 +29,15 @@ void	ft_end_minitalk(siginfo_t *info)
 	g_recieved = 0;
 }
 
+/**
+ * @brief Handles received signals, converting the signals to characters and
+ *        outputting the resultant string.
+ *
+ * @param signo The received signal.
+ * @param info Information structure related to signals.
+ * @param context Unused parameter. It's present for compatibility with signal
+ * handlers.
+ */
 void	ft_handler(int signo, siginfo_t *info, void *context)
 {
 	static int	i = 0;
@@ -47,6 +64,12 @@ void	ft_handler(int signo, siginfo_t *info, void *context)
 		rst <<= 1;
 }
 
+/**
+ * @brief Main function for the mini-talk server. It displays the server's
+ * PID and waits for signals from clients to print out messages.
+ *
+ * @return int Returns 0 when the server exits.
+ */
 int	main(void)
 {
 	struct sigaction	s_sig;

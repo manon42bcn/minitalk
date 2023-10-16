@@ -12,8 +12,17 @@
 
 #include "../inc/minitalk_bonus.h"
 
+/**
+ * @brief Counter for the number of bits received during a mini-talk session.
+ */
 static int	g_recieved = 0;
 
+/**
+ * @brief Sends signals to a specified PID and handles any signal sending errors.
+ *
+ * @param pid Process ID to send signals.
+ * @param signo Signal number (1 for SIGUSR1, 2 for SIGUSR2).
+ */
 void	ft_kill_errors(int pid, int signo)
 {
 	usleep(20);
@@ -35,6 +44,12 @@ void	ft_kill_errors(int pid, int signo)
 	}
 }
 
+/**
+ * @brief Concludes the current mini-talk session, acknowledges the client,
+ *        and displays the number of bits received.
+ *
+ * @param info Information structure related to signals.
+ */
 void	ft_end_minitalk(siginfo_t *info)
 {
 	ft_kill_errors(info->si_pid, 2);
@@ -43,6 +58,15 @@ void	ft_end_minitalk(siginfo_t *info)
 	g_recieved = 0;
 }
 
+/**
+ * @brief Handles received signals, converting the signals to characters,
+ *        acknowledges the client and displays the resultant message.
+ *
+ * @param signo The received signal.
+ * @param info Information structure related to signals.
+ * @param context Unused parameter. It's present for compatibility with
+ * signal handlers.
+ */
 void	ft_handler(int signo, siginfo_t *info, void *context)
 {
 	static int	i = 0;
@@ -70,6 +94,13 @@ void	ft_handler(int signo, siginfo_t *info, void *context)
 	ft_kill_errors(info->si_pid, 1);
 }
 
+/**
+ * @brief Main function for the mini-talk server bonus segment. It displays the
+ *        server's PID and awaits signals from clients to display messages,
+ *        sending acknowledgment after each received byte.
+ *
+ * @return int Returns 0 when the server exits.
+ */
 int	main(void)
 {
 	struct sigaction	s_sig;

@@ -12,8 +12,14 @@
 
 #include "../inc/minitalk_bonus.h"
 
+/**
+ * @brief Pointer to the message to be sent.
+ */
 static char	*g_message = NULL;
 
+/**
+ * @brief Frees any dynamically allocated memory and exits the program.
+ */
 void	ft_prepare_to_exit(void)
 {
 	if (g_message)
@@ -21,6 +27,12 @@ void	ft_prepare_to_exit(void)
 	exit(0);
 }
 
+/**
+ * @brief Sends signals to a specified PID and handles any signal sending errors.
+ *
+ * @param pid Process ID to send signals.
+ * @param signo Signal number (1 for SIGUSR1, 2 for SIGUSR2).
+ */
 void	ft_kill_errors(int pid, int signo)
 {
 	static int	sended = 0;
@@ -49,6 +61,12 @@ void	ft_kill_errors(int pid, int signo)
 		ft_printf("\x1b[35m[bits sended %i]", sended);
 }
 
+/**
+ * @brief Sends a message to the specified PID by converting each
+ *        character to binary and signaling the conversion.
+ *
+ * @param pid Process ID to send the message to.
+ */
 void	ft_messenger(int pid)
 {
 	static int	i = 0;
@@ -78,6 +96,11 @@ void	ft_messenger(int pid)
 	}
 }
 
+/**
+ * @brief Handles received confirmations via signals from the server.
+ *
+ * @param signo The received signal.
+ */
 void	ft_handler(int signo)
 {
 	static int	confirmed = 0;
@@ -95,6 +118,15 @@ void	ft_handler(int signo)
 	}
 }
 
+/**
+ * @brief Main function for the bonus part of the mini-talk client.
+ *        Sends messages and waits for confirmation from the server.
+ *
+ * @param argc Number of command line arguments.
+ * @param argv Array of command line arguments.
+ * @return int Returns 0 if the message is successfully sent or if there's
+ * an error.
+ */
 int	main(int argc, char *argv[])
 {
 	int	pid;
