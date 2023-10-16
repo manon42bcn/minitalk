@@ -12,8 +12,6 @@
 
 SERVER			=	server
 CLIENT			=	client
-LIB				=	libftprintf.a
-LIB_DIR			=	printf/
 SRC_DIR			=	srcs
 SRV_FILES		=	mt_server_main.c
 CLT_FILES		=	mt_client_main.c
@@ -37,10 +35,10 @@ INCLUDES_BNS	=	-Iinc/minitalk.h
 
 all: $(SERVER) $(CLIENT)
  
-$(SERVER): $(OBJS_SRV) $(LIB_DIR)$(LIB)
+$(SERVER): $(OBJS_SRV)
 	$(CC) -o $(SERVER) $(OBJS_SRV) $(LIB_DIR)$(LIB)
 
-$(CLIENT): $(OBJS_CLT) $(LIB_DIR)$(LIB)
+$(CLIENT): $(OBJS_CLT)
 	$(CC) -o $(CLIENT) $(OBJS_CLT) $(LIB_DIR)$(LIB)
 
 $(OBJS_SRV): $(SRCS_SRV)
@@ -49,17 +47,14 @@ $(OBJS_SRV): $(SRCS_SRV)
 $(OBJS_CLT): $(SRCS_CLT)
 	$(CC) $(CFLAGS) -c $(SRCS_CLT) $(INCLUDES)
 
-$(LIB_DIR)$(LIB):
-	$(MAKE) -C $(LIB_DIR)
-
 bonus: $(SERVER_BNS) $(CLIENT_BNS)
 
-$(SERVER_BNS): $(OBJS_SRV_BNS) $(LIB_DIR)$(LIB)
-	$(CC) $(CFLAGS) -o $(SERVER_BNS) $(OBJS_SRV_BNS) $(LIB_DIR)$(LIB)
+$(SERVER_BNS): $(OBJS_SRV_BNS)
+	$(CC) $(CFLAGS) -o $(SERVER_BNS) $(OBJS_SRV_BNS)
 	mv server_bonus server
 
-$(CLIENT_BNS): $(OBJS_CLT_BNS) $(LIB_DIR)$(LIB)
-	$(CC) $(CFLAGS) -o $(CLIENT_BNS) $(OBJS_CLT_BNS) $(LIB_DIR)$(LIB)
+$(CLIENT_BNS): $(OBJS_CLT_BNS)
+	$(CC) $(CFLAGS) -o $(CLIENT_BNS) $(OBJS_CLT_BNS)
 	mv client_bonus client
 
 $(OBJS_SRV_BNS): $(SRCS_SRV_BNS)
@@ -69,11 +64,9 @@ $(OBJS_CLT_BNS): $(SRCS_CLT_BNS)
 	$(CC) $(CFLAGS) -c $(SRCS_CLT_BNS) $(INCLUDES_BNS)
 
 clean:
-	$(MAKE) -C $(LIB_DIR) clean
 	$(RM) $(OBJS_SRV) $(OBJS_CLT) $(OBJS_SRV_BNS) $(OBJS_CLT_BNS)
 
 fclean: clean
-	$(MAKE) -C $(LIB_DIR) fclean
 	$(RM) $(SERVER) $(CLIENT)
 
 re:	fclean all

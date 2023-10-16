@@ -40,6 +40,8 @@
 ## Description
 Mini-Talk is a communication application that enables message transfers between a client and a server using UNIX signals. This system leverages the robustness of signal communication, allowing the client to send messages to the server, which the server then processes and outputs.
 
+### Grade: 125%.
+I didn't include ft_printf cuz I gotta check its Makefile to avoid some errors.
 ### Tips:
 
 - Play with usleep time. It's not a super reliable function, and that behaviour can be critical. 
@@ -186,4 +188,40 @@ The bonus segment of the server ensures that for every byte received, an acknowl
 #### Enhanced Error Handling
 In addition to the client's advanced error handling, the server is also fortified to handle signal sending errors. If the server faces any issue in sending acknowledgment signals, it immediately displays an error message and terminates gracefully.
 
+## Generating Documentation with Doxygen
+
+To generate detailed, and more friendly documentation for this project, follow the steps outlined below:
+
+### 1. Install Doxygen:
+
+If you haven't already installed Doxygen, you can do so using your system's package manager.
+
+* Debian/Ubuntu-based systems:
+
+```bash
+sudo apt-get install doxygen
+```
+
+* On macOS:
+
+```bash
+brew install doxygen
+```
+
+### 2. Generate the Documentation:
+
+From the root directory of the project, where the `Doxyfile` is located, run:
+
+```bash
+doxygen Doxyfile
+```
+
+### 3. View the Documentation:
+
+Once Doxygen completes the documentation generation, you can view it by opening the `html/index.html` file in your preferred web browser:
+
+```bash
+open docs/html/index.html   # On macOS
+xdg-open docs/html/index.html   # On Linux systems
+```
 

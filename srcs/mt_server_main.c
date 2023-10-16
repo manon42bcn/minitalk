@@ -24,8 +24,8 @@ static int	g_recieved = 0;
  */
 void	ft_end_minitalk(siginfo_t *info)
 {
-	ft_printf("\n\x1b[34m[%i] sended %i bits\n", info->si_pid, g_recieved);
-	ft_printf("------------------------------------\x1b[0m\n");
+	printf("\n\x1b[34m[%i] sended %i bits\n", info->si_pid, g_recieved);
+	printf("------------------------------------\x1b[0m\n");
 	g_recieved = 0;
 }
 
@@ -44,7 +44,7 @@ void	ft_handler(int signo, siginfo_t *info, void *context)
 	static char	rst = 0;
 
 	if (g_recieved == 0)
-		ft_printf("\x1b[35m[%i says]: \x1b[0m", info->si_pid);
+		printf("\x1b[35m[%i says]: \x1b[0m", info->si_pid);
 	(void)context;
 	g_recieved++;
 	rst |= (signo == SIGUSR1);
@@ -74,9 +74,9 @@ int	main(void)
 {
 	struct sigaction	s_sig;
 
-	ft_printf("\x1b[32m[PID-server: %i]\x1b[0m\n", getpid());
-	ft_printf("\x1B[38;2;176;174;174mIntructions:\n");
-	ft_printf("Run: ./client [PID-server] \"message to send\"\x1b[0m\n");
+	printf("\x1b[32m[PID-server: %i]\x1b[0m\n", getpid());
+	printf("\x1B[38;2;176;174;174mIntructions:\n");
+	printf("Run: ./client [PID-server] \"message to send\"\x1b[0m\n");
 	s_sig.sa_sigaction = ft_handler;
 	s_sig.sa_flags = SA_SIGINFO;
 	sigemptyset(&s_sig.sa_mask);

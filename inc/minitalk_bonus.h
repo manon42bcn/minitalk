@@ -13,7 +13,9 @@
 #ifndef MINITALK_BONUS_H
 # define MINITALK_BONUS_H
 
-# include "../printf/includes/ft_printf.h"
 # include <signal.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
 
 #endif
