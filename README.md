@@ -41,7 +41,7 @@
 Mini-Talk is a communication application that enables message transfers between a client and a server using UNIX signals. This system leverages the robustness of signal communication, allowing the client to send messages to the server, which the server then processes and outputs.
 
 ### Grade: 125%.
-I didn't include ft_printf cuz I gotta check its Makefile to avoid some errors.
+Makefile is not optimized to work with ft_printf with submodules, and I delete the behaviour to rename bonus bins.
 ### Tips:
 
 - Play with usleep time. It's not a super reliable function, and that behaviour can be critical. 

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minitalk_bonus.h"
+#include "minitalk.h"
 
 /**
  * @brief Pointer to the message to be sent.
@@ -41,7 +41,7 @@ void	ft_kill_errors(int pid, int signo)
 	{
 		if (kill(pid, SIGUSR1) == -1)
 		{
-			printf("\x1b[31mKill function error (SIGUSR1).\x1b[0m\n");
+			ft_printf("\x1b[31mKill function error (SIGUSR1).\x1b[0m\n");
 			ft_prepare_to_exit();
 		}
 		sended++;
@@ -50,7 +50,7 @@ void	ft_kill_errors(int pid, int signo)
 	{
 		if (kill(pid, SIGUSR2) == -1)
 		{
-			printf("\x1b[31mKill function error (SIGUSR2).\x1b[0m\n");
+			ft_printf("\x1b[31mKill function error (SIGUSR2).\x1b[0m\n");
 			ft_prepare_to_exit();
 		}
 		sended++;
@@ -58,7 +58,7 @@ void	ft_kill_errors(int pid, int signo)
 	if (signo == 1 || signo == 2)
 		usleep(200);
 	else if (signo == 0)
-		printf("\x1b[35m[bits sended %i]", sended);
+		ft_printf("\x1b[35m[bits sended %i]", sended);
 }
 
 /**
@@ -113,7 +113,7 @@ void	ft_handler(int signo)
 	else if (signo == SIGUSR2)
 	{
 		ft_kill_errors(0, 0);
-		printf("\x1b[34m[confirmations received %i]\x1b[0m\n", confirmed);
+		ft_printf("\x1b[34m[confirmations received %i]\x1b[0m\n", confirmed);
 		ft_prepare_to_exit();
 	}
 }
@@ -133,15 +133,15 @@ int	main(int argc, char *argv[])
 
 	if (argc != 3)
 	{
-		printf("\x1b[31mError\x1b[0m\n");
-		printf("\x1B[38;2;176;174;174mIntructions:\n");
-		printf("Run: ./client [PID-server] \"message to send\"\x1b[0m\n");
+		ft_printf("\x1b[31mError\x1b[0m\n");
+		ft_printf("\x1B[38;2;176;174;174mIntructions:\n");
+		ft_printf("Run: ./client [PID-server] \"message to send\"\x1b[0m\n");
 		return (0);
 	}
 	pid = ft_atoi(argv[1]);
 	if (pid < 1)
 	{
-		printf("\x1b[31mPID Error\x1b[0m\n");
+		ft_printf("\x1b[31mPID Error\x1b[0m\n");
 		return (0);
 	}
 	signal(SIGUSR1, &ft_handler);
